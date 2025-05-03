@@ -10,18 +10,21 @@ class Lib {
         favourite = '',
         fileCover = '',
         fileName = '') {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.authors = authors;
-    this.favourite = favourite;
-    this.fileCover = fileCover;
-    this.fileName = fileName;
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.authors = authors;
+        this.favourite = favourite;
+        this.fileCover = fileCover;
+        this.fileName = fileName;
     }
 }
 
 const library = {
-    'books': []
+    'books': [
+        new Lib(),
+        new Lib(),
+    ]
 }
 
 const app = express();
@@ -29,11 +32,12 @@ app.use(express.json());
 
 app.post('/api/user/login', (req, res) => {
     res.status(201)
-    res.json({ id: 1, mail: "test@mail.ru" })
+    res.json({id: 1, mail: "test@mail.ru"})
 })
 
 app.get('/api/books', (req, res) => {
-
+    const {books} = library
+    res.json(books)
 })
 
 app.get('/api/books/:id', (req, res) => {
