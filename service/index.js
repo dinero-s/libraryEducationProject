@@ -114,7 +114,7 @@ const updateBooks = async (req, res) => {
             res.json(books[indx])
         } else {
             res.status(404)
-            res.json('404 | страница не найдена')
+            res.json('404 | Страница не найдена')
         }
     } catch (error) {
         console.error(error)
@@ -133,7 +133,7 @@ const deleteBooks = async (req, res) => {
             res.json(`Book ${book.title} deleted`)
         } else {
             res.status(404)
-            res.json('404 | страница не найдена')
+            res.json('404 | Страница не найдена')
         }
     } catch (error) {
         console.error(error)
