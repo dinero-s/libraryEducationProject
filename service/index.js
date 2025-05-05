@@ -1,53 +1,54 @@
 const {v4: uuid} = require('uuid');
+const path = require('path');
 
-class Lib {
-    constructor(
-        id = uuid(),
-        title = '',
-        description = '',
-        authors = '',
-        favourite = '',
-        fileCover = '',
-        fileName = '') {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.authors = authors;
-        this.favourite = favourite;
-        this.fileCover = fileCover;
-        this.fileName = fileName;
-    }
-}
+// class Book {
+//     constructor(
+//         id = uuid(),
+//         title = '',
+//         description = '',
+//         authors = '',
+//         favourite = true,
+//         fileCover = '',
+//         fileName = '') {
+//         this.id = id;
+//         this.title = title;
+//         this.description = description;
+//         this.authors = authors;
+//         this.favourite = favourite;
+//         this.fileCover = fileCover;
+//         this.fileName = fileName;
+//     }
+// }
 
 const library = {
     'books': [
-        {
-            "id": uuid(),
-            "title": "You Don't Know JS",
-            "description": "A series of books diving deep into the core mechanisms of the JavaScript language.",
-            "authors": "Kyle Simpson",
-            "favourite": true,
-            "fileCover": "ydkjs-cover.jpg",
-            "fileName": "you-dont-know-js.pdf"
-        },
-        {
-            "id": uuid(),
-            "title": "Fluent Python",
-            "description": "Takes you through Python’s core language features and libraries to write effective code.",
-            "authors": "Luciano Ramalho",
-            "favourite": true,
-            "fileCover": "fluent-python-cover.jpg",
-            "fileName": "fluent-python.pdf"
-        },
-        {
-            "id": uuid(),
-            "title": "Introduction to Algorithms",
-            "description": "The leading textbook on algorithms, widely used in universities.",
-            "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
-            "favourite": false,
-            "fileCover": "algorithms-cover.jpg",
-            "fileName": "introduction-to-algorithms.pdf"
-        }
+        // {
+        //     "id": uuid(),
+        //     "title": "You Don't Know JS",
+        //     "description": "A series of books diving deep into the core mechanisms of the JavaScript language.",
+        //     "authors": "Kyle Simpson",
+        //     "favourite": true,
+        //     "fileCover": "ydkjs-cover.jpg",
+        //     "fileName": "you-dont-know-js.pdf"
+        // },
+        // {
+        //     "id": uuid(),
+        //     "title": "Fluent Python",
+        //     "description": "Takes you through Python’s core language features and libraries to write effective code.",
+        //     "authors": "Luciano Ramalho",
+        //     "favourite": true,
+        //     "fileCover": "fluent-python-cover.jpg",
+        //     "fileName": "fluent-python.pdf"
+        // },
+        // {
+        //     "id": uuid(),
+        //     "title": "Introduction to Algorithms",
+        //     "description": "The leading textbook on algorithms, widely used in universities.",
+        //     "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
+        //     "favourite": false,
+        //     "fileCover": "algorithms-cover.jpg",
+        //     "fileName": "introduction-to-algorithms.pdf"
+        // }
     ]
 }
 
@@ -62,11 +63,25 @@ const createBooks = async (req, res) => {
     try {
         const {title, description, authors, favourite, fileCover, fileName} = req.body
 
-        const newLib = new Lib(uuid(), title, description, authors, favourite, fileCover, fileName)
-        books.push(newLib)
+        if (!req.file) {
+            return res.status(400).json({error: 'Файл книги обязателен'});
+        }
+
+        const newBook = {
+            id: uuid(),
+            title,
+            description,
+            authors,
+            favourite,
+            fileCover,
+            fileName,
+            fileBook: req.file.filename
+        }
+
+        books.push(newBook)
 
         res.status(201)
-        res.json(newLib)
+        res.json(newBook)
     } catch (error) {
         console.error(error)
     }
@@ -105,7 +120,7 @@ const updateBooks = async (req, res) => {
         const {id} = req.params
         const indx = books.findIndex(el => el.id === id)
 
-        if (indx !== -1){
+        if (indx !== -1) {
             books[indx] = {
                 ...books[indx],
                 title,
@@ -128,7 +143,7 @@ const deleteBooks = async (req, res) => {
         const indx = books.findIndex(el => el.id === id)
         const book = books[indx]
 
-        if(indx !== -1){
+        if (indx !== -1) {
             books.splice(indx, 1)
             res.json(`Book ${book.title} deleted`)
         } else {
@@ -140,11 +155,30 @@ const deleteBooks = async (req, res) => {
     }
 }
 
+const downloadBooks = async (req, res) => {
+    try {
+        const {books} = library
+
+        const book = books.find(b => b.id === req.params.id);
+        const filePath = path.join(__dirname, '../public/books', book.fileBook);
+
+        res.download(filePath, book.fileName, (err) => {
+            if (err) {
+                console.error('Ошибка скачивания:', err);
+                res.status(500).json({ error: 'Ошибка при скачивании файла' });
+            }
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 module.exports = {
     createUser,
     createBooks,
     getAllBooks,
     getBooksByID,
     updateBooks,
-    deleteBooks
+    deleteBooks,
+    downloadBooks,
 }
