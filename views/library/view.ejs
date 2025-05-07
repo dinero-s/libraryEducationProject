@@ -1,0 +1,23 @@
+<%- include('../layouts/layout-start', { title: book.title }) %>
+
+<div class="card">
+    <div class="card-header">
+        <h2><%= book.title %></h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>ID:</strong> <%= book.id %></li>
+            <li class="list-group-item"><strong>Автор:</strong> <%= book.author %></li>
+            <li class="list-group-item"><strong>Год издания:</strong> <%= book.year %></li>
+        </ul>
+    </div>
+    <div class="card-footer">
+        <a href="/books/<%= book.id %>/update" class="btn btn-warning">Редактировать</a>
+        <form action="/books/<%= book.id %>/delete" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+        <a href="/books" class="btn btn-secondary">Назад к списку</a>
+    </div>
+</div>
+
+<%- include('../layouts/layout-end') %>

@@ -22,33 +22,33 @@ const path = require('path');
 
 const library = {
     'books': [
-        // {
-        //     "id": uuid(),
-        //     "title": "You Don't Know JS",
-        //     "description": "A series of books diving deep into the core mechanisms of the JavaScript language.",
-        //     "authors": "Kyle Simpson",
-        //     "favourite": true,
-        //     "fileCover": "ydkjs-cover.jpg",
-        //     "fileName": "you-dont-know-js.pdf"
-        // },
-        // {
-        //     "id": uuid(),
-        //     "title": "Fluent Python",
-        //     "description": "Takes you through Python’s core language features and libraries to write effective code.",
-        //     "authors": "Luciano Ramalho",
-        //     "favourite": true,
-        //     "fileCover": "fluent-python-cover.jpg",
-        //     "fileName": "fluent-python.pdf"
-        // },
-        // {
-        //     "id": uuid(),
-        //     "title": "Introduction to Algorithms",
-        //     "description": "The leading textbook on algorithms, widely used in universities.",
-        //     "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
-        //     "favourite": false,
-        //     "fileCover": "algorithms-cover.jpg",
-        //     "fileName": "introduction-to-algorithms.pdf"
-        // }
+        {
+            "id": uuid(),
+            "title": "You Don't Know JS",
+            "description": "A series of books diving deep into the core mechanisms of the JavaScript language.",
+            "authors": "Kyle Simpson",
+            "favourite": true,
+            "fileCover": "ydkjs-cover.jpg",
+            "fileName": "you-dont-know-js.pdf"
+        },
+        {
+            "id": uuid(),
+            "title": "Fluent Python",
+            "description": "Takes you through Python’s core language features and libraries to write effective code.",
+            "authors": "Luciano Ramalho",
+            "favourite": true,
+            "fileCover": "fluent-python-cover.jpg",
+            "fileName": "fluent-python.pdf"
+        },
+        {
+            "id": uuid(),
+            "title": "Introduction to Algorithms",
+            "description": "The leading textbook on algorithms, widely used in universities.",
+            "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
+            "favourite": false,
+            "fileCover": "algorithms-cover.jpg",
+            "fileName": "introduction-to-algorithms.pdf"
+        }
     ]
 }
 
@@ -90,7 +90,10 @@ const createBooks = async (req, res) => {
 const getAllBooks = async (req, res) => {
     const {books} = library
     try {
-        res.json(books)
+        res.render("./library/index", {
+            books,
+            title: "Все книги"
+        });
     } catch (error) {
         console.error(error)
     }

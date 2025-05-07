@@ -10,7 +10,6 @@ const storage = multer.diskStorage({
     }
 });
 
-// Создаем и экспортируем готовый middleware
 module.exports = multer({
     storage: storage,
     limits: { fileSize: 10 * 1024 * 1024 }
