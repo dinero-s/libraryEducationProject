@@ -29,7 +29,8 @@ const library = {
             "authors": "Kyle Simpson",
             "favourite": true,
             "fileCover": "ydkjs-cover.jpg",
-            "fileName": "you-dont-know-js.pdf"
+            "fileName": "you-dont-know-js.pdf",
+            "fileBook": "none"
         },
         {
             "id": uuid(),
@@ -38,7 +39,8 @@ const library = {
             "authors": "Luciano Ramalho",
             "favourite": true,
             "fileCover": "fluent-python-cover.jpg",
-            "fileName": "fluent-python.pdf"
+            "fileName": "fluent-python.pdf",
+            "fileBook": "none"
         },
         {
             "id": uuid(),
@@ -47,7 +49,8 @@ const library = {
             "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
             "favourite": false,
             "fileCover": "algorithms-cover.jpg",
-            "fileName": "introduction-to-algorithms.pdf"
+            "fileName": "introduction-to-algorithms.pdf",
+            "fileBook": "none"
         }
     ]
 }
@@ -123,10 +126,25 @@ const getBooksByID = async (req, res) => {
     }
 }
 
+const getUpdateBooks = async (req, res) => {
+    try {
+        const {books} = library
+        const {id} = req.params
+        const indx = books.findIndex(el => el.id === id)
+        res.render("library/update", {
+            title: "Редактировать книгу",
+            book: books[indx]
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Ошибка сервера");
+    }
+}
+
 const updateBooks = async (req, res) => {
     const {books} = library
     try {
-        const {title, description} = req.body
+        const {title, description, authors} = req.body
         const {id} = req.params
         const indx = books.findIndex(el => el.id === id)
 
@@ -135,8 +153,10 @@ const updateBooks = async (req, res) => {
                 ...books[indx],
                 title,
                 description,
+                authors,
             }
-            res.json(books[indx])
+
+            res.redirect(`/books/api/books/`);
         } else {
             res.status(404)
             res.json('404 | Страница не найдена')
@@ -184,6 +204,7 @@ const downloadBooks = async (req, res) => {
 }
 
 module.exports = {
+    getUpdateBooks,
     getCreateBooks,
     createUser,
     createBooks,

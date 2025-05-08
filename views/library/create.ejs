@@ -2,20 +2,24 @@
 
 <h1 class="mb-4 mt-3">Добавить новую книгу</h1>
 
-<form action="/books/api/books/create" method="POST">
+<form action="/books/api/books/create" method="POST" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="title" class="form-label">Название</label>
         <input type="text" class="form-control" id="title" name="title" required>
     </div>
 
     <div class="mb-3">
-        <label for="author" class="form-label">Описание</label>
-        <input type="text" class="form-control" id="desc" name="desc" required>
+        <label for="description" class="form-label">Описание</label>
+        <input type="text" class="form-control" id="description" name="description" required>
     </div>
 
     <div class="mb-3">
-        <label for="year" class="form-label">Автор</label>
-        <input type="text" class="form-control" id="author" name="author" required>
+        <label for="authors" class="form-label">Автор</label>
+        <input type="text" class="form-control" id="authors" name="authors" required>
+    </div>
+    <div class="mb-3">
+        <label for="bookFile" class="form-label">Файл книги (PDF, EPUB)</label>
+        <input type="file" class="form-control" id="bookFile" name="fileBook" accept=".pdf,.epub,.fb2" required>
     </div>
 
     <button type="submit" class="btn btn-primary">Сохранить</button>
