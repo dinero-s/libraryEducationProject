@@ -21,40 +21,18 @@ const path = require('path');
 // }
 
 const library = {
-    'books': [
-        // {
-        //     "id": uuid(),
-        //     "title": "You Don't Know JS",
-        //     "description": "A series of books diving deep into the core mechanisms of the JavaScript language.",
-        //     "authors": "Kyle Simpson",
-        //     "favourite": true,
-        //     "fileCover": "ydkjs-cover.jpg",
-        //     "fileName": "you-dont-know-js.pdf"
-        // },
-        // {
-        //     "id": uuid(),
-        //     "title": "Fluent Python",
-        //     "description": "Takes you through Python’s core language features and libraries to write effective code.",
-        //     "authors": "Luciano Ramalho",
-        //     "favourite": true,
-        //     "fileCover": "fluent-python-cover.jpg",
-        //     "fileName": "fluent-python.pdf"
-        // },
-        // {
-        //     "id": uuid(),
-        //     "title": "Introduction to Algorithms",
-        //     "description": "The leading textbook on algorithms, widely used in universities.",
-        //     "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
-        //     "favourite": false,
-        //     "fileCover": "algorithms-cover.jpg",
-        //     "fileName": "introduction-to-algorithms.pdf"
-        // }
-    ]
+    'books': []
 }
 
 const createUser = async (req, res) => {
     res.status(201)
     res.json({id: 1, mail: "test@mail.ru"})
+}
+
+const getCreateBooks = async (req, res) => {
+    res.render("library/create", {
+        title: "Добавить книгу  ",
+    });
 }
 
 const createBooks = async (req, res) => {
@@ -81,7 +59,7 @@ const createBooks = async (req, res) => {
         books.push(newBook)
 
         res.status(201)
-        res.json(newBook)
+        res.redirect(`/books/api/books`);
     } catch (error) {
         console.error(error)
     }
@@ -90,7 +68,11 @@ const createBooks = async (req, res) => {
 const getAllBooks = async (req, res) => {
     const {books} = library
     try {
-        res.json(books)
+        res.render("./library/index", {
+            title: 'Библиотека',
+            currentPath: req.path,
+            books: books
+        });
     } catch (error) {
         console.error(error)
     }
@@ -101,9 +83,11 @@ const getBooksByID = async (req, res) => {
     try {
         const {books} = library
         const indx = books.findIndex(el => el.id === id)
-
         if (indx !== -1) {
-            res.json(books[indx])
+            res.render("library/view", {
+                title: "Просмотр",
+                book: books[indx],
+            });
         } else {
             res.status(404)
             res.json('404 | Страница не найдена')
@@ -113,10 +97,25 @@ const getBooksByID = async (req, res) => {
     }
 }
 
+const getUpdateBooks = async (req, res) => {
+    try {
+        const {books} = library
+        const {id} = req.params
+        const indx = books.findIndex(el => el.id === id)
+        res.render("library/update", {
+            title: "Редактировать книгу",
+            book: books[indx]
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Ошибка сервера");
+    }
+}
+
 const updateBooks = async (req, res) => {
     const {books} = library
     try {
-        const {title, description} = req.body
+        const {title, description, authors} = req.body
         const {id} = req.params
         const indx = books.findIndex(el => el.id === id)
 
@@ -125,8 +124,10 @@ const updateBooks = async (req, res) => {
                 ...books[indx],
                 title,
                 description,
+                authors,
             }
-            res.json(books[indx])
+
+            res.redirect(`/books/api/books/`);
         } else {
             res.status(404)
             res.json('404 | Страница не найдена')
@@ -145,10 +146,10 @@ const deleteBooks = async (req, res) => {
 
         if (indx !== -1) {
             books.splice(indx, 1)
-            res.json(`Book ${book.title} deleted`)
+            res.redirect(`/books/api/books`);
         } else {
             res.status(404)
-            res.json('404 | Страница не найдена')
+            res.redirect('/404')
         }
     } catch (error) {
         console.error(error)
@@ -174,6 +175,8 @@ const downloadBooks = async (req, res) => {
 }
 
 module.exports = {
+    getUpdateBooks,
+    getCreateBooks,
     createUser,
     createBooks,
     getAllBooks,
