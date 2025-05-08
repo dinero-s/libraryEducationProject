@@ -21,38 +21,7 @@ const path = require('path');
 // }
 
 const library = {
-    'books': [
-        {
-            "id": uuid(),
-            "title": "You Don't Know JS",
-            "description": "A series of books diving deep into the core mechanisms of the JavaScript language.",
-            "authors": "Kyle Simpson",
-            "favourite": true,
-            "fileCover": "ydkjs-cover.jpg",
-            "fileName": "you-dont-know-js.pdf",
-            "fileBook": "none"
-        },
-        {
-            "id": uuid(),
-            "title": "Fluent Python",
-            "description": "Takes you through Python’s core language features and libraries to write effective code.",
-            "authors": "Luciano Ramalho",
-            "favourite": true,
-            "fileCover": "fluent-python-cover.jpg",
-            "fileName": "fluent-python.pdf",
-            "fileBook": "none"
-        },
-        {
-            "id": uuid(),
-            "title": "Introduction to Algorithms",
-            "description": "The leading textbook on algorithms, widely used in universities.",
-            "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein",
-            "favourite": false,
-            "fileCover": "algorithms-cover.jpg",
-            "fileName": "introduction-to-algorithms.pdf",
-            "fileBook": "none"
-        }
-    ]
+    'books': []
 }
 
 const createUser = async (req, res) => {
@@ -114,9 +83,11 @@ const getBooksByID = async (req, res) => {
     try {
         const {books} = library
         const indx = books.findIndex(el => el.id === id)
-
         if (indx !== -1) {
-            res.json(books[indx])
+            res.render("library/view", {
+                title: "Просмотр",
+                book: books[indx],
+            });
         } else {
             res.status(404)
             res.json('404 | Страница не найдена')
