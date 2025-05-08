@@ -17,7 +17,7 @@ app.set('view options', {
     async: false, // или true, если используете асинхронные шаблоны
     compileDebug: true
 });
-// app.use('/', indexRouter)
+app.use('/', indexRouter)
 app.use('/books', booksRouter)
 
 app.use(errorMiddleware)

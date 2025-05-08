@@ -57,6 +57,12 @@ const createUser = async (req, res) => {
     res.json({id: 1, mail: "test@mail.ru"})
 }
 
+const getCreateBooks = async (req, res) => {
+    res.render("library/create", {
+        title: "Добавить книгу  ",
+    });
+}
+
 const createBooks = async (req, res) => {
     const {books} = library
 
@@ -81,7 +87,7 @@ const createBooks = async (req, res) => {
         books.push(newBook)
 
         res.status(201)
-        res.json(newBook)
+        res.redirect(`/books/api/books`);
     } catch (error) {
         console.error(error)
     }
@@ -91,8 +97,9 @@ const getAllBooks = async (req, res) => {
     const {books} = library
     try {
         res.render("./library/index", {
-            books,
-            title: "Все книги"
+            title: 'Библиотека',
+            currentPath: req.path,
+            books: books
         });
     } catch (error) {
         console.error(error)
@@ -148,10 +155,10 @@ const deleteBooks = async (req, res) => {
 
         if (indx !== -1) {
             books.splice(indx, 1)
-            res.json(`Book ${book.title} deleted`)
+            res.redirect(`/books/api/books`);
         } else {
             res.status(404)
-            res.json('404 | Страница не найдена')
+            res.redirect('/404')
         }
     } catch (error) {
         console.error(error)
@@ -177,6 +184,7 @@ const downloadBooks = async (req, res) => {
 }
 
 module.exports = {
+    getCreateBooks,
     createUser,
     createBooks,
     getAllBooks,
