@@ -1,0 +1,38 @@
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  counter:
+    build:
+      context: ./counter-service
+    ports:
+      - "80:3005"
+    environment:
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  library:
+    build:
+      context: ./book-service
+    ports:
+      - "81:3005"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+volumes:
+  redis_data:
